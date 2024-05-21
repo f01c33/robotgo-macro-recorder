@@ -1,0 +1,161 @@
+package main
+
+/*
+// #include "key/keycode.h"
+#include "key/keypress_c.h"
+
+#cgo darwin CFLAGS: -x objective-c -Wno-deprecated-declarations
+#cgo darwin LDFLAGS: -framework Cocoa -framework OpenGL -framework IOKit
+#cgo darwin LDFLAGS: -framework Carbon -framework CoreFoundation
+
+#cgo linux CFLAGS: -I/usr/src
+#cgo linux LDFLAGS: -L/usr/src -lm -lX11 -lXtst
+
+#cgo windows LDFLAGS: -lgdi32 -luser32
+//
+// #include "screen/goScreen.h"
+// #include "mouse/mouse_c.h"
+// #include "window/goWindow.h"
+
+*/
+import "C"
+
+var keyNames = map[uint32]string{
+	C.K_BACKSPACE: "backspace",
+	C.K_DELETE:    "delete",
+	C.K_RETURN:    "enter",
+	C.K_TAB:       "tab",
+	C.K_ESCAPE:    "esc",
+	C.K_UP:        "up",
+	C.K_DOWN:      "down",
+	C.K_RIGHT:     "right",
+	C.K_LEFT:      "left",
+	C.K_HOME:      "home",
+	C.K_END:       "end",
+	C.K_PAGEUP:    "pageup",
+	C.K_PAGEDOWN:  "pagedown",
+	//
+	C.K_F1:  "f1",
+	C.K_F2:  "f2",
+	C.K_F3:  "f3",
+	C.K_F4:  "f4",
+	C.K_F5:  "f5",
+	C.K_F6:  "f6",
+	C.K_F7:  "f7",
+	C.K_F8:  "f8",
+	C.K_F9:  "f9",
+	C.K_F10: "f10",
+	C.K_F11: "f11",
+	C.K_F12: "f12",
+	C.K_F13: "f13",
+	C.K_F14: "f14",
+	C.K_F15: "f15",
+	C.K_F16: "f16",
+	C.K_F17: "f17",
+	C.K_F18: "f18",
+	C.K_F19: "f19",
+	C.K_F20: "f20",
+	C.K_F21: "f21",
+	C.K_F22: "f22",
+	C.K_F23: "f23",
+	C.K_F24: "f24",
+	//
+	C.K_META:        "meta",
+	C.K_ALT:         "alt",
+	C.K_RALT:        "ralt",
+	C.K_CONTROL:     "ctrl",
+	C.K_SHIFT:       "shift",
+	C.K_RSHIFT:      "right_shift",
+	C.K_CAPSLOCK:    "capslock",
+	C.K_SPACE:       "space",
+	C.K_PRINTSCREEN: "print",
+	C.K_INSERT:      "insert",
+	C.K_MENU:        "menu",
+
+	C.K_AUDIO_VOLUME_MUTE: "audio_mute",
+	C.K_AUDIO_VOLUME_DOWN: "audio_vol_down",
+	C.K_AUDIO_VOLUME_UP:   "audio_vol_up",
+	C.K_AUDIO_PLAY:        "audio_play",
+	C.K_AUDIO_STOP:        "audio_stop",
+	C.K_AUDIO_PAUSE:       "audio_pause",
+	C.K_AUDIO_PREV:        "audio_prev",
+	C.K_AUDIO_NEXT:        "audio_next",
+	C.K_AUDIO_REWIND:      "audio_rewind",
+	C.K_AUDIO_FORWARD:     "audio_forward",
+	C.K_AUDIO_REPEAT:      "audio_repeat",
+	C.K_AUDIO_RANDOM:      "audio_random",
+
+	C.K_NUMPAD_0:    "num0",
+	C.K_NUMPAD_1:    "num1",
+	C.K_NUMPAD_2:    "num2",
+	C.K_NUMPAD_3:    "num3",
+	C.K_NUMPAD_4:    "num4",
+	C.K_NUMPAD_5:    "num5",
+	C.K_NUMPAD_6:    "num6",
+	C.K_NUMPAD_7:    "num7",
+	C.K_NUMPAD_8:    "num8",
+	C.K_NUMPAD_9:    "num9",
+	C.K_NUMPAD_LOCK: "num_lock",
+
+	C.K_NUMPAD_DECIMAL: "num.",
+	C.K_NUMPAD_PLUS:    "num+",
+	C.K_NUMPAD_MINUS:   "num-",
+	// C.K_NUMPAD_=MUL:     "num*",
+	// C.K_NUMPAD_DIV:     "num/",
+	C.K_NUMPAD_ENTER: "num_enter",
+	// C.K_NUMPAD_EQUAL:   "num_equal",
+
+	C.K_LIGHTS_MON_UP:     "lights_mon_up",
+	C.K_LIGHTS_MON_DOWN:   "lights_mon_down",
+	C.K_LIGHTS_KBD_TOGGLE: "lights_kbd_toggle",
+	C.K_LIGHTS_KBD_UP:     "lights_kbd_up",
+	C.K_LIGHTS_KBD_DOWN:   "lights_kbd_down",
+	'q':                   "q",
+	'w':                   "w",
+	'e':                   "e",
+	'r':                   "r",
+	't':                   "t",
+	'y':                   "y",
+	'u':                   "u",
+	'i':                   "i",
+	'o':                   "o",
+	'p':                   "p",
+	'a':                   "a",
+	's':                   "s",
+	'd':                   "d",
+	'f':                   "f",
+	'g':                   "g",
+	'h':                   "h",
+	'j':                   "j",
+	'k':                   "k",
+	'l':                   "l",
+	'\\':                  "\\",
+	'z':                   "z",
+	'x':                   "x",
+	'c':                   "c",
+	'v':                   "v",
+	'b':                   "b",
+	'n':                   "n",
+	'm':                   "m",
+	',':                   ",",
+	'.':                   ".",
+	';':                   ";",
+	'/':                   "/",
+	'~':                   "~",
+	']':                   "]",
+	'[':                   "[",
+	'´':                   "´",
+	'0':                   "0",
+	'1':                   "1",
+	'2':                   "2",
+	'3':                   "3",
+	'4':                   "4",
+	'5':                   "5",
+	'6':                   "6",
+	'7':                   "7",
+	'8':                   "8",
+	'9':                   "9",
+	'-':                   "-",
+	'=':                   "=",
+	// { NULL:              C.K_NOT_A_KEY }
+}
