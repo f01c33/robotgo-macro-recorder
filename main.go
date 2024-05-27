@@ -26,20 +26,22 @@ func main() {
 
 	tmpCode := []string{}
 	f, err := os.Create(fmt.Sprintf("%d.go", time.Now().Unix()))
-
 	if err != nil {
 		panic(err)
 	}
 	defer f.Close()
 
-	c := make(chan os.Signal)
+	c := make(chan os.Signal, 5)
 	signal.Notify(c, os.Interrupt, syscall.SIGTERM|syscall.SIGABRT)
 
 	t := template.Must(template.New("template.go.tmpl").Parse(tmpl))
 
 	go func() {
 		<-c
-		t.Execute(f, Export{Code: strings.Join(tmpCode, "\n")})
+		err := t.Execute(f, Export{Code: strings.Join(tmpCode, "\n")})
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+		}
 		os.Exit(1)
 	}()
 
